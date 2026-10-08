@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Traffic CART | Classification</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(5, 10, 18, 0.94),
+                    rgba(5, 10, 18, 0.97)
+                ),
+                url("/static/images/traffic-bg.jpg");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        nav {
+
+            width: 100%;
+
+            padding: 18px 6%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            background: rgba(5, 10, 18, 0.97);
+
+            border-bottom:
+                1px solid
+                rgba(0, 255, 255, 0.20);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+        }
+
+
+        .logo {
+
+            color: #00ffff;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            list-style: none;
+
+            gap: 25px;
+        }
+
+
+        .nav-links a {
+
+            text-decoration: none;
+
+            color: white;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+        }
+
+
+        .nav-links a:hover {
+
+            color: #00ffff;
+        }
+
+
+        .nav-links .active {
+
+            color: #00ffff;
+        }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1250px;
+
+            margin: auto;
+
+            padding: 45px 0;
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+
+        .hero h1 {
+
+            font-size: 40px;
+
+            color: #00ffff;
+
+            margin-bottom: 12px;
+        }
+
+
+        .hero p {
+
+            color: #9db0c5;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+        }
+
+
+        .badge {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 7px 16px;
+
+            border-radius: 20px;
+
+            border:
+                1px solid
+                #00ff99;
+
+            color: #00ff99;
+
+            background:
+                rgba(0,255,153,0.07);
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+
+            background:
+                rgba(8,17,29,0.93);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.14);
+
+            border-radius: 15px;
+
+            padding: 24px;
+
+            text-align: center;
+        }
+
+
+        .stat-number {
+
+            color: #00ffff;
+
+            font-size: 30px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        .stat-label {
+
+            color: #8fa3b8;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           CARD
+        ========================= */
+
+        .card {
+
+            background:
+                rgba(8,17,29,0.94);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.14);
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .card h2 {
+
+            color: #00ffff;
+
+            font-size: 22px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .card-description {
+
+            color: #8fa3b8;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =========================
+           CHART GRID
+        ========================= */
+
+        .chart-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+        }
+
+
+        .chart-box {
+
+            height: 350px;
+
+            padding: 20px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(0,0,0,0.18);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.08);
+        }
+
+
+        .chart-box h3 {
+
+            color: #c6d2de;
+
+            font-size: 15px;
+
+            margin-bottom: 15px;
+
+            text-align: center;
+        }
+
+
+        .chart-wrapper {
+
+            height: 280px;
+
+            position: relative;
+        }
+
+
+        /* =========================
+           CLASSIFICATION CARDS
+        ========================= */
+
+        .classification-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-top: 20px;
+        }
+
+
+        .classification-card {
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            text-align: center;
+
+            background:
+                rgba(0,255,255,0.03);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+        }
+
+
+        .classification-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .classification-card h3 {
+
+            font-size: 18px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .classification-card p {
+
+            color: #8fa3b8;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        .low-title {
+
+            color: #00ff99;
+        }
+
+
+        .medium-title {
+
+            color: #ffd000;
+        }
+
+
+        .high-title {
+
+            color: #ff5555;
+        }
+
+
+        /* =========================
+           PRIORITY
+        ========================= */
+
+        .priority-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 12px;
+
+            margin-top: 20px;
+        }
+
+
+        .priority-card {
+
+            padding: 20px 10px;
+
+            text-align: center;
+
+            border-radius: 12px;
+
+            background:
+                rgba(0,255,255,0.03);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+        }
+
+
+        .priority-number {
+
+            font-size: 28px;
+
+            color: #00ffff;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        .priority-card p {
+
+            color: #8fa3b8;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           MODEL INFORMATION
+        ========================= */
+
+        .model-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+        }
+
+
+        .model-item {
+
+            padding: 22px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(0,255,255,0.03);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+        }
+
+
+        .model-label {
+
+            color: #00ffff;
+
+            font-size: 11px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .model-value {
+
+            color: #d3dde7;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           PIPELINE
+        ========================= */
+
+        .pipeline {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 12px;
+
+            margin-top: 20px;
+        }
+
+
+        .pipeline-step {
+
+            text-align: center;
+
+            padding: 22px 12px;
+
+            border-radius: 13px;
+
+            background:
+                rgba(0,255,255,0.03);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+
+            position: relative;
+        }
+
+
+        .pipeline-step-number {
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 50%;
+
+            margin: auto auto 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                rgba(0,255,255,0.08);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.25);
+
+            color: #00ffff;
+
+            font-weight: bold;
+        }
+
+
+        .pipeline-step h3 {
+
+            color: white;
+
+            font-size: 13px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .pipeline-step p {
+
+            color: #8195a9;
+
+            font-size: 10px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           NOTE
+        ========================= */
+
+        .note {
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            margin-top: 20px;
+
+            background:
+                rgba(255,200,0,0.05);
+
+            border:
+                1px solid
+                rgba(255,200,0,0.18);
+
+            color: #b9aa74;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #72849a;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media(max-width: 950px) {
+
+            nav {
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .nav-links {
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+
+                gap: 12px;
+            }
+
+            .stats {
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .chart-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .classification-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .model-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .pipeline {
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .priority-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+        }
+
+
+        @media(max-width: 600px) {
+
+            .stats {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .priority-grid {
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .pipeline {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .hero h1 {
+
+                font-size: 30px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav>
+
+    <div class="logo">
+        TRAFFIC CART
+    </div>
+
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/prediction">
+                Prediction
+            </a>
+        </li>
+
+        <li>
+            <a href="/eda">
+                Analytics
+            </a>
+        </li>
+
+        <li>
+            <a href="/dataset">
+                Dataset
+            </a>
+        </li>
+
+        <li>
+            <a href="/classification"
+               class="active">
+                Classification
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+            ML CLASSIFICATION
+        </h1>
+
+        <p>
+
+            Traffic condition and priority
+            classification using supervised
+            machine learning.
+
+        </p>
+
+        <div class="badge">
+
+            ● RANDOM FOREST CLASSIFIER
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         STATS
+    ========================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                {{ total_records }}
+
+            </div>
+
+            <div class="stat-label">
+
+                Training Records
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                6
+
+            </div>
+
+            <div class="stat-label">
+
+                Input Features
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                3
+
+            </div>
+
+            <div class="stat-label">
+
+                Traffic Classes
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                5
+
+            </div>
+
+            <div class="stat-label">
+
+                Priority Levels
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =========================
+         CHARTS
+    ========================= -->
+
+    <section class="card">
+
+        <h2>
+            Classification Distribution
+        </h2>
+
+        <p class="card-description">
+
+            Distribution of traffic condition
+            and priority classes available in
+            the dataset.
+
+        </p>
+
+
+        <div class="chart-grid">
+
+
+            <!-- CONDITION -->
+
+            <div class="chart-box">
+
+                <h3>
+                    Traffic Condition
+                </h3>
+
+                <div class="chart-wrapper">
+
+                    <canvas id="conditionChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRIORITY -->
+
+            <div class="chart-box">
+
+                <h3>
+                    Traffic Priority
+                </h3>
+
+                <div class="chart-wrapper">
+
+                    <canvas id="priorityChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         TRAFFIC CLASSES
+    ========================= -->
+
+    <section class="card">
+
+        <h2>
+            Traffic Condition Classes
+        </h2>
+
+        <p class="card-description">
+
+            The classification model categorizes
+            traffic conditions into three levels.
+
+        </p>
+
+
+        <div class="classification-grid">
+
+
+            <div class="classification-card">
+
+                <div class="classification-icon">
+                    🟢
+                </div>
+
+                <h3 class="low-title">
+                    LOW
+                </h3>
+
+                <p>
+
+                    Traffic is moving relatively
+                    smoothly with lower density,
+                    congestion and delay.
+
+                </p>
+
+            </div>
+
+
+            <div class="classification-card">
+
+                <div class="classification-icon">
+                    🟡
+                </div>
+
+                <h3 class="medium-title">
+                    MEDIUM
+                </h3>
+
+                <p>
+
+                    Moderate traffic density and
+                    congestion with increased
+                    delay.
+
+                </p>
+
+            </div>
+
+
+            <div class="classification-card">
+
+                <div class="classification-icon">
+                    🔴
+                </div>
+
+                <h3 class="high-title">
+                    HIGH
+                </h3>
+
+                <p>
+
+                    Heavy traffic with higher
+                    congestion, density and
+                    network delay.
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         PRIORITY LEVELS
+    ========================= -->
+
+    <section class="card">
+
+        <h2>
+            Traffic Priority Levels
+        </h2>
+
+        <p class="card-description">
+
+            The system assigns a priority level
+            from 1 to 5 based on the traffic
+            input characteristics.
+
+        </p>
+
+
+        <div class="priority-grid">
+
+
+            <div class="priority-card">
+
+                <div class="priority-number">
+                    1
+                </div>
+
+                <p>
+                    Lowest Priority
+                </p>
+
+            </div>
+
+
+            <div class="priority-card">
+
+                <div class="priority-number">
+                    2
+                </div>
+
+                <p>
+                    Low Priority
+                </p>
+
+            </div>
+
+
+            <div class="priority-card">
+
+                <div class="priority-number">
+                    3
+                </div>
+
+                <p>
+                    Medium Priority
+                </p>
+
+            </div>
+
+
+            <div class="priority-card">
+
+                <div class="priority-number">
+                    4
+                </div>
+
+                <p>
+                    High Priority
+                </p>
+
+            </div>
+
+
+            <div class="priority-card">
+
+                <div class="priority-number">
+                    5
+                </div>
+
+                <p>
+                    Highest Priority
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         MODEL INFORMATION
+    ========================= -->
+
+    <section class="card">
+
+        <h2>
+            Machine Learning Model
+        </h2>
+
+        <p class="card-description">
+
+            The application uses Random Forest
+            classification models to predict
+            traffic condition and priority.
+
+        </p>
+
+
+        <div class="model-grid">
+
+
+            <div class="model-item">
+
+                <div class="model-label">
+                    ALGORITHM
+                </div>
+
+                <div class="model-value">
+                    Random Forest
+                </div>
+
+            </div>
+
+
+            <div class="model-item">
+
+                <div class="model-label">
+                    LEARNING TYPE
+                </div>
+
+                <div class="model-value">
+                    Supervised Learning
+                </div>
+
+            </div>
+
+
+            <div class="model-item">
+
+                <div class="model-label">
+                    CONDITION OUTPUT
+                </div>
+
+                <div class="model-value">
+                    Low / Medium / High
+                </div>
+
+            </div>
+
+
+            <div class="model-item">
+
+                <div class="model-label">
+                    PRIORITY OUTPUT
+                </div>
+
+                <div class="model-value">
+                    1 – 5
+                </div>
+
+            </div>
+
+
+            <div class="model-item">
+
+                <div class="model-label">
+                    FEATURES
+                </div>
+
+                <div class="model-value">
+                    6 Traffic Parameters
+                </div>
+
+            </div>
+
+
+            <div class="model-item">
+
+                <div class="model-label">
+                    FRAMEWORK
+                </div>
+
+                <div class="model-value">
+                    Python + Flask
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="note">
+
+            <strong>Project Note:</strong>
+
+            The current web application is a
+            demonstration system using the
+            provided traffic dataset. Model
+            performance should be evaluated
+            using a larger real-world dataset
+            before production deployment.
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         ML PIPELINE
+    ========================= -->
+
+    <section class="card">
+
+        <h2>
+            Classification Pipeline
+        </h2>
+
+        <p class="card-description">
+
+            Overview of how traffic data moves
+            through the machine learning system.
+
+        </p>
+
+
+        <div class="pipeline">
+
+
+            <div class="pipeline-step">
+
+                <div class="pipeline-step-number">
+                    1
+                </div>
+
+                <h3>
+                    Input Data
+                </h3>
+
+                <p>
+                    Six traffic and network
+                    parameters are collected.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-step">
+
+                <div class="pipeline-step-number">
+                    2
+                </div>
+
+                <h3>
+                    Data Processing
+                </h3>
+
+                <p>
+                    Pandas loads and prepares
+                    the dataset.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-step">
+
+                <div class="pipeline-step-number">
+                    3
+                </div>
+
+                <h3>
+                    ML Model
+                </h3>
+
+                <p>
+                    Random Forest classifiers
+                    process the features.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-step">
+
+                <div class="pipeline-step-number">
+                    4
+                </div>
+
+                <h3>
+                    Classification
+                </h3>
+
+                <p>
+                    Condition and priority
+                    classes are predicted.
+                </p>
+
+            </div>
+
+
+            <div class="pipeline-step">
+
+                <div class="pipeline-step-number">
+                    5
+                </div>
+
+                <h3>
+                    Result
+                </h3>
+
+                <p>
+                    Prediction is displayed
+                    through Flask.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    Traffic CART —
+    AI/ML Traffic Intelligence System
+
+</footer>
+
+
+
+<!-- =========================
+     CHART JAVASCRIPT
+========================= -->
+
+<script>
+
+
+    /* =========================================
+       CONDITION DATA
+    ========================================= */
+
+
+    const conditionData =
+        {{ condition_counts | tojson }};
+
+
+    const conditionLabels =
+        Object.keys(conditionData);
+
+
+    const conditionValues =
+        Object.values(conditionData);
+
+
+    new Chart(
+
+        document
+        .getElementById("conditionChart"),
+
+        {
+
+            type: "doughnut",
+
+            data: {
+
+                labels:
+                    conditionLabels,
+
+                datasets: [
+
+                    {
+
+                        data:
+                            conditionValues,
+
+                        backgroundColor: [
+
+                            "#00ff99",
+                            "#ffd000",
+                            "#ff4444"
+
+                        ],
+
+                        borderWidth: 0
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            color: "#c6d2de"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+
+
+    /* =========================================
+       PRIORITY DATA
+    ========================================= */
+
+
+    const priorityData =
+        {{ priority_counts | tojson }};
+
+
+    const priorityLabels =
+        Object.keys(priorityData);
+
+
+    const priorityValues =
+        Object.values(priorityData);
+
+
+    new Chart(
+
+        document
+        .getElementById("priorityChart"),
+
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    priorityLabels.map(
+                        value => "P" + value
+                    ),
+
+                datasets: [
+
+                    {
+
+                        label:
+                            "Records",
+
+                        data:
+                            priorityValues,
+
+                        backgroundColor:
+                            "#00ffff",
+
+                        borderRadius: 6
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    x: {
+
+                        ticks: {
+
+                            color: "#9db0c5"
+
+                        },
+
+                        grid: {
+
+                            display: false
+
+                        }
+
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            color: "#9db0c5",
+
+                            precision: 0
+
+                        },
+
+                        grid: {
+
+                            color:
+                                "rgba(255,255,255,0.05)"
+
+                        }
+
+                    }
+
+                },
+
+                plugins: {
+
+                    legend: {
+
+                        labels: {
+
+                            color: "#c6d2de"
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+</script>
+
+
+</body>
+
+</html>

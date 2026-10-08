@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Traffic CART | Dataset</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(5, 10, 18, 0.94),
+                    rgba(5, 10, 18, 0.97)
+                ),
+                url("/static/images/traffic-bg.jpg");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+
+        /* NAVBAR */
+
+        nav {
+
+            width: 100%;
+
+            padding: 18px 6%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            background: rgba(5, 10, 18, 0.97);
+
+            border-bottom:
+                1px solid
+                rgba(0, 255, 255, 0.2);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+        }
+
+
+        .logo {
+
+            color: #00ffff;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            list-style: none;
+
+            gap: 25px;
+        }
+
+
+        .nav-links a {
+
+            text-decoration: none;
+
+            color: white;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+        }
+
+
+        .nav-links a:hover {
+
+            color: #00ffff;
+        }
+
+
+        .nav-links .active {
+
+            color: #00ffff;
+        }
+
+
+        /* CONTAINER */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1300px;
+
+            margin: auto;
+
+            padding: 45px 0;
+        }
+
+
+        /* HERO */
+
+        .hero {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+
+        .hero h1 {
+
+            font-size: 40px;
+
+            color: #00ffff;
+
+            margin-bottom: 12px;
+        }
+
+
+        .hero p {
+
+            color: #9db0c5;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+        }
+
+
+        /* CARDS */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+
+            background:
+                rgba(8, 17, 29, 0.92);
+
+            border:
+                1px solid
+                rgba(0, 255, 255, 0.14);
+
+            border-radius: 15px;
+
+            padding: 25px;
+
+            text-align: center;
+        }
+
+
+        .stat-number {
+
+            color: #00ffff;
+
+            font-size: 30px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        .stat-label {
+
+            color: #8fa3b8;
+
+            font-size: 13px;
+        }
+
+
+        /* DATASET CARD */
+
+        .dataset-card {
+
+            background:
+                rgba(8, 17, 29, 0.94);
+
+            border:
+                1px solid
+                rgba(0, 255, 255, 0.14);
+
+            border-radius: 18px;
+
+            padding: 30px;
+        }
+
+
+        .dataset-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+
+            gap: 20px;
+        }
+
+
+        .dataset-header h2 {
+
+            color: #00ffff;
+
+            font-size: 22px;
+        }
+
+
+        .search-box {
+
+            width: 280px;
+
+            padding: 12px 15px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid
+                #26394d;
+
+            background:
+                #0b1522;
+
+            color: white;
+
+            outline: none;
+        }
+
+
+        .search-box:focus {
+
+            border-color: #00ffff;
+        }
+
+
+        /* TABLE */
+
+        .table-container {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+            border-radius: 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 1000px;
+        }
+
+
+        th {
+
+            background:
+                rgba(0, 255, 255, 0.08);
+
+            color: #00ffff;
+
+            padding: 15px 12px;
+
+            font-size: 12px;
+
+            text-align: center;
+
+            border-bottom:
+                1px solid
+                rgba(0,255,255,0.15);
+
+            position: sticky;
+
+            top: 0;
+        }
+
+
+        td {
+
+            padding: 13px 12px;
+
+            text-align: center;
+
+            color: #c6d2de;
+
+            font-size: 12px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.05);
+        }
+
+
+        tr:hover td {
+
+            background:
+                rgba(0,255,255,0.04);
+
+            color: white;
+        }
+
+
+        /* CONDITION */
+
+        .condition {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        .low {
+
+            background:
+                rgba(0,255,100,0.12);
+
+            color: #00ff99;
+        }
+
+
+        .medium {
+
+            background:
+                rgba(255,200,0,0.12);
+
+            color: #ffd000;
+        }
+
+
+        .high {
+
+            background:
+                rgba(255,50,50,0.12);
+
+            color: #ff5555;
+        }
+
+
+        /* PRIORITY */
+
+        .priority {
+
+            font-weight: bold;
+
+            color: #00ffff;
+        }
+
+
+        /* INFO */
+
+        .info {
+
+            margin-top: 25px;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px;
+        }
+
+
+        .info-card {
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(0,255,255,0.03);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+        }
+
+
+        .info-card h3 {
+
+            color: #00ffff;
+
+            font-size: 16px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .info-card p {
+
+            color: #9db0c5;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #72849a;
+
+            font-size: 12px;
+        }
+
+
+        /* RESPONSIVE */
+
+        @media(max-width: 800px) {
+
+            nav {
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .nav-links {
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+
+                gap: 12px;
+            }
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+            .dataset-header {
+
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .search-box {
+
+                width: 100%;
+            }
+
+            .info {
+
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+
+                font-size: 30px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav>
+
+    <div class="logo">
+        TRAFFIC CART
+    </div>
+
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/prediction">
+                Prediction
+            </a>
+        </li>
+
+        <li>
+            <a href="/eda">
+                Analytics
+            </a>
+        </li>
+
+        <li>
+            <a href="/dataset"
+               class="active">
+                Dataset
+            </a>
+        </li>
+
+        <li>
+            <a href="/classification">
+                Classification
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- MAIN -->
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+            TRAFFIC DATASET
+        </h1>
+
+        <p>
+
+            Explore the traffic and VANET network
+            dataset used for machine learning
+            prediction.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                {{ dataset|length }}
+
+            </div>
+
+            <div class="stat-label">
+
+                Dataset Records
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                6
+
+            </div>
+
+            <div class="stat-label">
+
+                Input Features
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-number">
+
+                2
+
+            </div>
+
+            <div class="stat-label">
+
+                Prediction Targets
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- DATASET -->
+
+    <section class="dataset-card">
+
+
+        <div class="dataset-header">
+
+
+            <h2>
+                Dataset Records
+            </h2>
+
+
+            <input
+                type="text"
+                id="searchInput"
+                class="search-box"
+                placeholder="Search dataset..."
+                onkeyup="searchTable()"
+            >
+
+
+        </div>
+
+
+
+        <div class="table-container">
+
+
+            <table id="datasetTable">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            Speed
+                        </th>
+
+                        <th>
+                            Density
+                        </th>
+
+                        <th>
+                            Congestion
+                        </th>
+
+                        <th>
+                            Delay
+                        </th>
+
+                        <th>
+                            Signal Strength
+                        </th>
+
+                        <th>
+                            Bandwidth
+                        </th>
+
+                        <th>
+                            Traffic Condition
+                        </th>
+
+                        <th>
+                            Priority
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for row in dataset %}
+
+                    <tr>
+
+
+                        <td>
+                            {{ row.get('id', loop.index) }}
+                        </td>
+
+
+                        <td>
+                            {{ row['Speed'] }}
+                        </td>
+
+
+                        <td>
+                            {{ row['Density'] }}
+                        </td>
+
+
+                        <td>
+                            {{ row['Congestion'] }}
+                        </td>
+
+
+                        <td>
+                            {{ row['Delay'] }}
+                        </td>
+
+
+                        <td>
+                            {{ row['Signal_Strength'] }}
+                        </td>
+
+
+                        <td>
+                            {{ row['Bandwidth'] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if row['Traffic_Condition'] == 'Low' %}
+
+                                <span class="condition low">
+                                    LOW
+                                </span>
+
+                            {% elif row['Traffic_Condition'] == 'Medium' %}
+
+                                <span class="condition medium">
+                                    MEDIUM
+                                </span>
+
+                            {% else %}
+
+                                <span class="condition high">
+                                    HIGH
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="priority">
+
+                                P{{ row['Priority'] }}
+
+                            </span>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- INFORMATION -->
+
+        <div class="info">
+
+
+            <div class="info-card">
+
+                <h3>
+                    Input Features
+                </h3>
+
+                <p>
+
+                    The model uses Speed, Density,
+                    Congestion, Delay, Signal Strength
+                    and Bandwidth as input parameters
+                    for traffic prediction.
+
+                </p>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>
+                    Prediction Targets
+                </h3>
+
+                <p>
+
+                    The system predicts two outputs:
+                    Traffic Condition with Low, Medium
+                    and High classes, and Traffic
+                    Priority from 1 to 5.
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    Traffic CART —
+    AI/ML Traffic Intelligence System
+
+</footer>
+
+
+
+<script>
+
+    function searchTable() {
+
+        let input =
+            document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+
+        let table =
+            document
+            .getElementById("datasetTable");
+
+
+        let rows =
+            table
+            .getElementsByTagName("tr");
+
+
+        for (
+            let i = 1;
+            i < rows.length;
+            i++
+        ) {
+
+            let rowText =
+                rows[i]
+                .textContent
+                .toLowerCase();
+
+
+            if (
+                rowText.includes(input)
+            ) {
+
+                rows[i].style.display = "";
+
+            }
+
+            else {
+
+                rows[i].style.display = "none";
+
+            }
+
+        }
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

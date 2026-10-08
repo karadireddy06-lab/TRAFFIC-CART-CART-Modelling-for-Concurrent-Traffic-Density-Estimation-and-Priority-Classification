@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Traffic CART | Prediction</title>
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(5, 10, 18, 0.92),
+                    rgba(5, 10, 18, 0.96)
+                ),
+                url("/static/images/traffic-bg.jpg");
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-attachment: fixed;
+
+            color: white;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        nav {
+
+            width: 100%;
+
+            padding: 18px 6%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            background:
+                rgba(5, 10, 18, 0.96);
+
+            border-bottom:
+                1px solid
+                rgba(0, 255, 255, 0.20);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+        }
+
+
+        .logo {
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            color: #00ffff;
+
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            list-style: none;
+
+            gap: 25px;
+
+        }
+
+
+        .nav-links a {
+
+            text-decoration: none;
+
+            color: white;
+
+            font-size: 14px;
+
+            transition: 0.3s;
+
+        }
+
+
+        .nav-links a:hover {
+
+            color: #00ffff;
+
+        }
+
+
+        .nav-links .active {
+
+            color: #00ffff;
+
+        }
+
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 45px 0;
+
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .hero h1 {
+
+            font-size: 40px;
+
+            color: #00ffff;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .hero p {
+
+            color: #9db0c5;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+        }
+
+
+        .online {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 7px 16px;
+
+            border-radius: 20px;
+
+            border:
+                1px solid
+                #00ff99;
+
+            color: #00ff99;
+
+            background:
+                rgba(0, 255, 153, 0.08);
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           MAIN GRID
+        ===================================================== */
+
+        .main-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.5fr 1fr;
+
+            gap: 25px;
+
+        }
+
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+
+            background:
+                rgba(8, 17, 29, 0.92);
+
+            border:
+                1px solid
+                rgba(0, 255, 255, 0.14);
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+        }
+
+
+        .card h2 {
+
+            color: #00ffff;
+
+            font-size: 22px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .card-description {
+
+            color: #8fa3b8;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 18px;
+
+        }
+
+
+        .input-group label {
+
+            display: block;
+
+            color: #b7c5d6;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .input-group input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid
+                #26394d;
+
+            background:
+                #0b1522;
+
+            color: white;
+
+            font-size: 14px;
+
+            outline: none;
+
+        }
+
+
+        .input-group input:focus {
+
+            border-color: #00ffff;
+
+            box-shadow:
+                0 0 10px
+                rgba(0, 255, 255, 0.08);
+
+        }
+
+
+        .button-row {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .predict-btn {
+
+            flex: 1;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #00ffff;
+
+            color: #001015;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+        }
+
+
+        .predict-btn:hover {
+
+            background: #00ff99;
+
+            transform: translateY(-2px);
+
+        }
+
+
+        .clear-btn {
+
+            padding: 14px 22px;
+
+            border-radius: 9px;
+
+            border:
+                1px solid
+                #34495e;
+
+            background:
+                transparent;
+
+            color: #b7c5d6;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+        }
+
+
+        .clear-btn:hover {
+
+            border-color: #00ffff;
+
+            color: #00ffff;
+
+        }
+
+
+        /* =====================================================
+           RESULT
+        ===================================================== */
+
+        .result-container {
+
+            margin-top: 25px;
+
+        }
+
+
+        .result-title {
+
+            color: #8fa3b8;
+
+            font-size: 13px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .result-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+
+        }
+
+
+        .result-card {
+
+            padding: 22px;
+
+            text-align: center;
+
+            border-radius: 14px;
+
+            background:
+                rgba(0, 255, 255, 0.04);
+
+            border:
+                1px solid
+                rgba(0, 255, 255, 0.15);
+
+        }
+
+
+        .result-card h3 {
+
+            color: #9db0c5;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .result-value {
+
+            color: #00ff99;
+
+            font-size: 28px;
+
+            font-weight: bold;
+
+        }
+
+
+        /* =====================================================
+           TRAFFIC STATUS
+        ===================================================== */
+
+        .traffic-status {
+
+            margin-top: 20px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            border-radius: 15px;
+
+            background:
+                rgba(0, 0, 0, 0.25);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.10);
+
+        }
+
+
+        .traffic-status h3 {
+
+            color: #b7c5d6;
+
+            font-size: 14px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .lights {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 20px;
+
+        }
+
+
+        .light {
+
+            width: 85px;
+
+            height: 85px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            opacity: 0.22;
+
+            transition: 0.4s;
+
+        }
+
+
+        .light.active {
+
+            opacity: 1;
+
+            transform: scale(1.1);
+
+            box-shadow:
+                0 0 25px
+                rgba(255,255,255,0.30);
+
+        }
+
+
+        .low {
+
+            background: #00cc66;
+
+        }
+
+
+        .medium {
+
+            background: #e6b800;
+
+        }
+
+
+        .high {
+
+            background: #ff3333;
+
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .error {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            border:
+                1px solid
+                #ff4444;
+
+            background:
+                rgba(255, 0, 0, 0.08);
+
+            color: #ff7777;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================================
+           MODEL INFORMATION
+        ===================================================== */
+
+        .info-item {
+
+            padding: 16px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.07);
+
+        }
+
+
+        .info-item:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .info-label {
+
+            color: #00ffff;
+
+            font-size: 12px;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .info-value {
+
+            color: #c6d2de;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =====================================================
+           FEATURE LIST
+        ===================================================== */
+
+        .feature-list {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .feature {
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            background:
+                rgba(0,255,255,0.04);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+
+            color: #c6d2de;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           HOW IT WORKS
+        ===================================================== */
+
+        .how-it-works {
+
+            margin-top: 25px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+
+        }
+
+
+        .step {
+
+            text-align: center;
+
+            padding: 18px 10px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(0,255,255,0.03);
+
+            border:
+                1px solid
+                rgba(0,255,255,0.10);
+
+        }
+
+
+        .step-number {
+
+            color: #00ffff;
+
+            font-size: 22px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .step p {
+
+            color: #9db0c5;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #72849a;
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media(max-width: 900px) {
+
+            .main-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .how-it-works {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+        }
+
+
+        @media(max-width: 600px) {
+
+            nav {
+
+                flex-direction: column;
+
+                gap: 15px;
+
+            }
+
+            .nav-links {
+
+                flex-wrap: wrap;
+
+                justify-content: center;
+
+                gap: 12px;
+
+            }
+
+            .hero h1 {
+
+                font-size: 30px;
+
+            }
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .result-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .feature-list {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .how-it-works {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .button-row {
+
+                flex-direction: column;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<nav>
+
+
+    <div class="logo">
+
+        TRAFFIC CART
+
+    </div>
+
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/prediction" class="active">
+                Prediction
+            </a>
+        </li>
+
+        <li>
+            <a href="/eda">
+                Analytics
+            </a>
+        </li>
+
+        <li>
+            <a href="/dataset">
+                Dataset
+            </a>
+        </li>
+
+        <li>
+            <a href="/classification">
+                Classification
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="container">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>
+            TRAFFIC PREDICTION
+        </h1>
+
+        <p>
+            Enter traffic and network parameters to
+            predict the current traffic condition
+            and priority level.
+        </p>
+
+        <div class="online">
+
+            ● ML MODEL READY
+
+        </div>
+
+    </section>
+
+
+
+    <!-- MAIN GRID -->
+
+    <div class="main-grid">
+
+
+        <!-- =================================================
+             PREDICTION FORM
+        ================================================== -->
+
+        <div class="card">
+
+
+            <h2>
+                Traffic Input Parameters
+            </h2>
+
+
+            <p class="card-description">
+
+                Provide the six input features used by
+                the trained Random Forest classification
+                models.
+
+            </p>
+
+
+            <form
+                method="POST"
+                id="predictionForm"
+            >
+
+
+                <div class="form-grid">
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Speed
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="speed"
+                            placeholder="e.g. 50"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Density
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="density"
+                            placeholder="e.g. 40"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Congestion
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="congestion"
+                            placeholder="e.g. 35"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Delay
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="delay"
+                            placeholder="e.g. 10"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Signal Strength
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="signal_strength"
+                            placeholder="e.g. 75"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>
+                            Bandwidth
+                        </label>
+
+                        <input
+                            type="number"
+                            step="any"
+                            name="bandwidth"
+                            placeholder="e.g. 75"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="button-row">
+
+
+                    <button
+                        type="submit"
+                        class="predict-btn"
+                    >
+
+                        RUN PREDICTION
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="clear-btn"
+                        onclick="clearForm()"
+                    >
+
+                        CLEAR
+
+                    </button>
+
+
+                </div>
+
+            </form>
+
+
+
+            <!-- ERROR -->
+
+            {% if error %}
+
+                <div class="error">
+
+                    {{ error }}
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- RESULTS -->
+
+            {% if condition is not none %}
+
+
+                <div class="result-container">
+
+
+                    <div class="result-title">
+
+                        PREDICTION RESULT
+
+                    </div>
+
+
+                    <div class="result-grid">
+
+
+                        <div class="result-card">
+
+                            <h3>
+                                Traffic Condition
+                            </h3>
+
+                            <div class="result-value">
+
+                                {{ condition }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="result-card">
+
+                            <h3>
+                                Traffic Priority
+                            </h3>
+
+                            <div class="result-value">
+
+                                {{ priority }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- TRAFFIC LIGHT -->
+
+                    <div class="traffic-status">
+
+
+                        <h3>
+                            TRAFFIC CONDITION INDICATOR
+                        </h3>
+
+
+                        <div class="lights">
+
+
+                            <div
+                                id="lowLight"
+                                class="light low"
+                            >
+
+                                LOW
+
+                            </div>
+
+
+                            <div
+                                id="mediumLight"
+                                class="light medium"
+                            >
+
+                                MEDIUM
+
+                            </div>
+
+
+                            <div
+                                id="highLight"
+                                class="light high"
+                            >
+
+                                HIGH
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             MODEL INFORMATION
+        ================================================== -->
+
+        <div class="card">
+
+
+            <h2>
+                Model Information
+            </h2>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    ALGORITHM
+                </div>
+
+                <div class="info-value">
+                    Random Forest Classifier
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    PREDICTION TYPE
+                </div>
+
+                <div class="info-value">
+                    Supervised Classification
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    TRAFFIC CONDITION
+                </div>
+
+                <div class="info-value">
+                    Low / Medium / High
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    TRAFFIC PRIORITY
+                </div>
+
+                <div class="info-value">
+                    Priority Levels 1 – 5
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    WEB FRAMEWORK
+                </div>
+
+                <div class="info-value">
+                    Python Flask
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    DATA PROCESSING
+                </div>
+
+                <div class="info-value">
+                    Python + Pandas
+                </div>
+
+            </div>
+
+
+            <div class="info-label"
+                 style="margin-top:25px;">
+
+                INPUT FEATURES
+
+            </div>
+
+
+            <div class="feature-list">
+
+
+                <div class="feature">
+                    Speed
+                </div>
+
+
+                <div class="feature">
+                    Density
+                </div>
+
+
+                <div class="feature">
+                    Congestion
+                </div>
+
+
+                <div class="feature">
+                    Delay
+                </div>
+
+
+                <div class="feature">
+                    Signal Strength
+                </div>
+
+
+                <div class="feature">
+                    Bandwidth
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         HOW IT WORKS
+    ====================================================== -->
+
+    <section class="card"
+             style="margin-top:25px;">
+
+
+        <h2>
+            How Prediction Works
+        </h2>
+
+
+        <div class="how-it-works">
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <p>
+                    Enter traffic and network
+                    parameters.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <p>
+                    Flask receives the
+                    input values.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <p>
+                    Random Forest models
+                    process the features.
+                </p>
+
+            </div>
+
+
+            <div class="step">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <p>
+                    Traffic condition and
+                    priority are predicted.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    Traffic CART —
+    AI/ML Traffic Intelligence System
+
+</footer>
+
+
+
+<script>
+
+    /* =====================================================
+       TRAFFIC INDICATOR
+    ===================================================== */
+
+    {% if condition is not none %}
+
+
+        const condition =
+            "{{ condition }}".toLowerCase();
+
+
+        const low =
+            document.getElementById(
+                "lowLight"
+            );
+
+
+        const medium =
+            document.getElementById(
+                "mediumLight"
+            );
+
+
+        const high =
+            document.getElementById(
+                "highLight"
+            );
+
+
+        if (condition === "low") {
+
+            low.classList.add(
+                "active"
+            );
+
+        }
+
+
+        else if (condition === "medium") {
+
+            medium.classList.add(
+                "active"
+            );
+
+        }
+
+
+        else if (condition === "high") {
+
+            high.classList.add(
+                "active"
+            );
+
+        }
+
+    {% endif %}
+
+
+
+    /* =====================================================
+       CLEAR FORM
+    ===================================================== */
+
+    function clearForm() {
+
+        document.getElementById(
+            "predictionForm"
+        ).reset();
+
+        window.location.href =
+            "/prediction";
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

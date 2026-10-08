@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Traffic CART | Exploratory Data Analysis
+    </title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(5, 10, 18, 0.92),
+                    rgba(5, 10, 18, 0.97)
+                ),
+                url("/static/images/traffic-bg.jpg");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        header {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+
+            background:
+                rgba(7, 14, 25, 0.96);
+
+            border-bottom:
+                1px solid
+                rgba(0, 217, 255, 0.20);
+
+            backdrop-filter: blur(12px);
+        }
+
+
+        .navbar {
+
+            max-width: 1400px;
+
+            margin: auto;
+
+            padding: 18px 30px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .logo {
+
+            font-size: 24px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            color: #00d9ff;
+        }
+
+
+        .logo span {
+
+            color: white;
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            gap: 10px;
+
+            list-style: none;
+
+            flex-wrap: wrap;
+        }
+
+
+        .nav-links a {
+
+            text-decoration: none;
+
+            color: #cbd5e1;
+
+            padding: 10px 15px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: 0.3s;
+        }
+
+
+        .nav-links a:hover {
+
+            color: #00d9ff;
+
+            background:
+                rgba(0, 217, 255, 0.10);
+        }
+
+
+        .nav-links .active {
+
+            color: #00d9ff;
+
+            background:
+                rgba(0, 217, 255, 0.10);
+        }
+
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+
+        .container {
+
+            max-width: 1400px;
+
+            margin: auto;
+
+            padding: 40px 30px;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+
+            text-align: center;
+
+            padding: 55px 20px;
+
+            margin-bottom: 35px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0, 217, 255, 0.10),
+                    rgba(20, 30, 50, 0.75)
+                );
+
+            border:
+                1px solid
+                rgba(0, 217, 255, 0.18);
+        }
+
+
+        .status {
+
+            display: inline-block;
+
+            padding: 7px 15px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(0, 255, 150, 0.10);
+
+            border:
+                1px solid
+                rgba(0, 255, 150, 0.35);
+
+            color: #00ff9d;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            margin-bottom: 18px;
+        }
+
+
+        .hero h1 {
+
+            font-size: 44px;
+
+            margin-bottom: 15px;
+
+            letter-spacing: 1px;
+        }
+
+
+        .hero h1 span {
+
+            color: #00d9ff;
+        }
+
+
+        .hero p {
+
+            max-width: 800px;
+
+            margin: auto;
+
+            color: #9aa9bb;
+
+            line-height: 1.7;
+
+            font-size: 16px;
+        }
+
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section {
+
+            margin-top: 35px;
+        }
+
+
+        .section-title {
+
+            color: #00d9ff;
+
+            font-size: 27px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .section-subtitle {
+
+            color: #7f8ea3;
+
+            margin-bottom: 22px;
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+        }
+
+
+        .stat-card {
+
+            background:
+                rgba(12, 22, 36, 0.90);
+
+            border:
+                1px solid
+                rgba(0, 217, 255, 0.15);
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            transition: 0.3s;
+        }
+
+
+        .stat-card:hover {
+
+            transform:
+                translateY(-4px);
+
+            border-color:
+                rgba(0, 217, 255, 0.45);
+        }
+
+
+        .stat-card h3 {
+
+            color: #8d9bad;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 12px;
+        }
+
+
+        .stat-card .value {
+
+            font-size: 31px;
+
+            font-weight: bold;
+
+            color: white;
+        }
+
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .card {
+
+            background:
+                rgba(12, 22, 36, 0.90);
+
+            border:
+                1px solid
+                rgba(0, 217, 255, 0.15);
+
+            border-radius: 18px;
+
+            padding: 25px;
+        }
+
+
+        .card h3 {
+
+            color: #00d9ff;
+
+            margin-bottom: 20px;
+
+            font-size: 18px;
+        }
+
+
+        /* =====================================================
+           CHART GRID
+        ===================================================== */
+
+        .chart-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+        }
+
+
+        .chart-box {
+
+            height: 340px;
+
+            position: relative;
+        }
+
+
+        /* =====================================================
+           CORRELATION
+        ===================================================== */
+
+        .correlation-container {
+
+            overflow-x: auto;
+        }
+
+
+        .correlation-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 700px;
+        }
+
+
+        .correlation-table th {
+
+            background: #101d2c;
+
+            color: #00d9ff;
+
+            padding: 13px;
+
+            font-size: 12px;
+        }
+
+
+        .correlation-table td {
+
+            padding: 12px;
+
+            text-align: center;
+
+            border:
+                1px solid
+                #1b2c40;
+
+            font-size: 12px;
+
+            color: #dbe4ee;
+        }
+
+
+        .corr-positive {
+
+            background:
+                rgba(0, 217, 255, 0.20);
+        }
+
+
+        .corr-negative {
+
+            background:
+                rgba(255, 90, 90, 0.20);
+        }
+
+
+        .corr-neutral {
+
+            background:
+                rgba(255, 255, 255, 0.05);
+        }
+
+
+        /* =====================================================
+           STATISTICAL TABLE
+        ===================================================== */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 650px;
+        }
+
+
+        th {
+
+            background: #101d2c;
+
+            color: #00d9ff;
+
+            padding: 14px;
+
+            text-align: left;
+
+            font-size: 13px;
+        }
+
+
+        td {
+
+            padding: 13px 14px;
+
+            border-bottom:
+                1px solid
+                #1c2b3d;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+        }
+
+
+        tr:hover td {
+
+            background:
+                rgba(0, 217, 255, 0.04);
+        }
+
+
+        /* =====================================================
+           INSIGHTS
+        ===================================================== */
+
+        .insights {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+
+        .insight {
+
+            padding: 20px;
+
+            background:
+                #0a1624;
+
+            border:
+                1px solid
+                #1e3349;
+
+            border-radius: 12px;
+        }
+
+
+        .insight h4 {
+
+            color: #00d9ff;
+
+            margin-bottom: 8px;
+        }
+
+
+        .insight p {
+
+            color: #8e9caf;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           DATASET TABLE
+        ===================================================== */
+
+        .condition-badge {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 15px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        .low {
+
+            background:
+                rgba(0, 255, 150, 0.10);
+
+            color: #00ff9d;
+        }
+
+
+        .medium {
+
+            background:
+                rgba(255, 200, 0, 0.10);
+
+            color: #ffd166;
+        }
+
+
+        .high {
+
+            background:
+                rgba(255, 70, 70, 0.10);
+
+            color: #ff7373;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        footer {
+
+            margin-top: 50px;
+
+            padding: 30px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            border-top:
+                1px solid
+                rgba(0, 217, 255, 0.12);
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media(max-width: 1000px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .chart-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .insights {
+
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        @media(max-width: 650px) {
+
+            .navbar {
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+
+                font-size: 32px;
+            }
+
+            .container {
+
+                padding: 25px 15px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+    <div class="navbar">
+
+        <div class="logo">
+
+            TRAFFIC <span>CART</span>
+
+        </div>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="/">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="/prediction">
+                    Prediction
+                </a>
+            </li>
+
+            <li>
+                <a href="/eda"
+                   class="active">
+                    Analytics
+                </a>
+            </li>
+
+            <li>
+                <a href="/dataset">
+                    Dataset
+                </a>
+            </li>
+
+            <li>
+                <a href="/classification">
+                    Classification
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero">
+
+        <div class="status">
+            ● ANALYTICS MODULE ONLINE
+        </div>
+
+        <h1>
+            Exploratory <span>Data Analysis</span>
+        </h1>
+
+        <p>
+
+            Analyze traffic characteristics, feature relationships,
+            distributions and statistical patterns from the
+            Traffic CART demonstration dataset.
+
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DATASET OVERVIEW
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Dataset Overview
+        </h2>
+
+        <p class="section-subtitle">
+            Basic information about the traffic dataset.
+        </p>
+
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Total Records
+                </h3>
+
+                <div class="value">
+                    {{ total_records }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Input Features
+                </h3>
+
+                <div class="value">
+                    {{ total_features }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Traffic Conditions
+                </h3>
+
+                <div class="value">
+                    3
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    Priority Levels
+                </h3>
+
+                <div class="value">
+                    5
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DISTRIBUTION
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Distribution Analysis
+        </h2>
+
+        <p class="section-subtitle">
+            Distribution of traffic conditions and priority levels.
+        </p>
+
+
+        <div class="chart-grid">
+
+
+            <!-- CONDITION -->
+
+            <div class="card">
+
+                <h3>
+                    Traffic Condition Distribution
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="conditionChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRIORITY -->
+
+            <div class="card">
+
+                <h3>
+                    Traffic Priority Distribution
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="priorityChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FEATURE RELATIONSHIPS
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Feature Relationship Analysis
+        </h2>
+
+        <p class="section-subtitle">
+            Visual relationship between important traffic parameters.
+        </p>
+
+
+        <div class="chart-grid">
+
+
+            <!-- SPEED VS DENSITY -->
+
+            <div class="card">
+
+                <h3>
+                    Speed vs Density
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="speedDensityChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONGESTION VS DELAY -->
+
+            <div class="card">
+
+                <h3>
+                    Congestion vs Delay
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="congestionDelayChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIGNAL VS BANDWIDTH -->
+
+            <div class="card">
+
+                <h3>
+                    Signal Strength vs Bandwidth
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="signalBandwidthChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- AVERAGE FEATURES -->
+
+            <div class="card">
+
+                <h3>
+                    Average Feature Values
+                </h3>
+
+                <div class="chart-box">
+
+                    <canvas
+                        id="averageChart">
+                    </canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CORRELATION
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Correlation Analysis
+        </h2>
+
+        <p class="section-subtitle">
+            Correlation values show the relationship between
+            numerical traffic features.
+        </p>
+
+
+        <div class="card">
+
+            <div class="correlation-container">
+
+                <table class="correlation-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Feature
+                            </th>
+
+                            {% for feature in statistics.keys() %}
+
+                            <th>
+                                {{ feature }}
+                            </th>
+
+                            {% endfor %}
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for feature in statistics.keys() %}
+
+                        <tr>
+
+                            <th>
+                                {{ feature }}
+                            </th>
+
+
+                            {% for other in statistics.keys() %}
+
+                            {% set value =
+                                correlation[feature][other]
+                            %}
+
+
+                            {% if value >= 0.5 %}
+
+                            <td class="corr-positive">
+
+                                {{ value }}
+
+                            </td>
+
+                            {% elif value <= -0.5 %}
+
+                            <td class="corr-negative">
+
+                                {{ value }}
+
+                            </td>
+
+                            {% else %}
+
+                            <td class="corr-neutral">
+
+                                {{ value }}
+
+                            </td>
+
+                            {% endif %}
+
+
+                            {% endfor %}
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         STATISTICAL SUMMARY
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Statistical Summary
+        </h2>
+
+        <p class="section-subtitle">
+            Minimum, maximum and average values of each feature.
+        </p>
+
+
+        <div class="card">
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Feature
+                            </th>
+
+                            <th>
+                                Mean
+                            </th>
+
+                            <th>
+                                Minimum
+                            </th>
+
+                            <th>
+                                Maximum
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for feature, values in statistics.items() %}
+
+                        <tr>
+
+                            <td>
+                                {{ feature }}
+                            </td>
+
+                            <td>
+                                {{ values["mean"] }}
+                            </td>
+
+                            <td>
+                                {{ values["min"] }}
+                            </td>
+
+                            <td>
+                                {{ values["max"] }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         KEY INSIGHTS
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Key Insights
+        </h2>
+
+        <p class="section-subtitle">
+            Observations obtained from exploratory analysis.
+        </p>
+
+
+        <div class="insights">
+
+
+            <div class="insight">
+
+                <h4>
+                    Traffic Condition
+                </h4>
+
+                <p>
+                    The dataset contains three traffic conditions:
+                    Low, Medium and High. These conditions are used
+                    as the target classes for traffic condition
+                    classification.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <h4>
+                    Traffic Priority
+                </h4>
+
+                <p>
+                    Traffic priority is represented using five
+                    levels from 1 to 5. The priority model predicts
+                    the appropriate level based on traffic parameters.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <h4>
+                    Traffic Density
+                </h4>
+
+                <p>
+                    Increasing traffic density generally represents
+                    a more congested traffic environment and can
+                    influence the predicted traffic condition.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <h4>
+                    Network Parameters
+                </h4>
+
+                <p>
+                    Signal strength and available bandwidth provide
+                    additional information about the communication
+                    environment of the vehicular network.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DATASET PREVIEW
+    ====================================================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Dataset Preview
+        </h2>
+
+        <p class="section-subtitle">
+            Records used for exploratory analysis.
+        </p>
+
+
+        <div class="card">
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Speed
+                            </th>
+
+                            <th>
+                                Density
+                            </th>
+
+                            <th>
+                                Congestion
+                            </th>
+
+                            <th>
+                                Delay
+                            </th>
+
+                            <th>
+                                Signal Strength
+                            </th>
+
+                            <th>
+                                Bandwidth
+                            </th>
+
+                            <th>
+                                Condition
+                            </th>
+
+                            <th>
+                                Priority
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in dataset %}
+
+                        <tr>
+
+                            <td>
+                                {{ row["Speed"] }}
+                            </td>
+
+                            <td>
+                                {{ row["Density"] }}
+                            </td>
+
+                            <td>
+                                {{ row["Congestion"] }}
+                            </td>
+
+                            <td>
+                                {{ row["Delay"] }}
+                            </td>
+
+                            <td>
+                                {{ row["Signal_Strength"] }}
+                            </td>
+
+                            <td>
+                                {{ row["Bandwidth"] }}
+                            </td>
+
+
+                            <td>
+
+                                {% if row["Traffic_Condition"] == "Low" %}
+
+                                <span
+                                    class="condition-badge low">
+                                    LOW
+                                </span>
+
+                                {% elif row["Traffic_Condition"] == "Medium" %}
+
+                                <span
+                                    class="condition-badge medium">
+                                    MEDIUM
+                                </span>
+
+                                {% else %}
+
+                                <span
+                                    class="condition-badge high">
+                                    HIGH
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ row["Priority"] }}
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    Traffic CART — Exploratory Data Analysis
+
+    <br><br>
+
+    Machine Learning Based Traffic Condition
+    and Priority Classification System
+
+</footer>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   DATA FROM FLASK
+========================================================= */
+
+const conditionLabels =
+    {{ condition_counts.keys() | list | tojson }};
+
+const conditionValues =
+    {{ condition_counts.values() | list | tojson }};
+
+
+const priorityLabels =
+    {{ priority_counts.keys() | list | tojson }};
+
+const priorityValues =
+    {{ priority_counts.values() | list | tojson }};
+
+
+
+/* =========================================================
+   DATASET ARRAYS
+========================================================= */
+
+const speeds = [
+    {% for row in dataset %}
+        {{ row["Speed"] }},
+    {% endfor %}
+];
+
+
+const densities = [
+    {% for row in dataset %}
+        {{ row["Density"] }},
+    {% endfor %}
+];
+
+
+const congestions = [
+    {% for row in dataset %}
+        {{ row["Congestion"] }},
+    {% endfor %}
+];
+
+
+const delays = [
+    {% for row in dataset %}
+        {{ row["Delay"] }},
+    {% endfor %}
+];
+
+
+const signals = [
+    {% for row in dataset %}
+        {{ row["Signal_Strength"] }},
+    {% endfor %}
+];
+
+
+const bandwidths = [
+    {% for row in dataset %}
+        {{ row["Bandwidth"] }},
+    {% endfor %}
+];
+
+
+
+/* =========================================================
+   CHART DEFAULTS
+========================================================= */
+
+Chart.defaults.color = "#94a3b8";
+
+Chart.defaults.borderColor =
+    "rgba(255,255,255,0.06)";
+
+
+
+/* =========================================================
+   CONDITION CHART
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "conditionChart"
+    ),
+
+    {
+
+        type: "doughnut",
+
+        data: {
+
+            labels: conditionLabels,
+
+            datasets: [{
+
+                data: conditionValues,
+
+                borderWidth: 2
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+
+                    position: "bottom"
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+
+/* =========================================================
+   PRIORITY CHART
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "priorityChart"
+    ),
+
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: priorityLabels,
+
+            datasets: [{
+
+                label:
+                    "Number of Records",
+
+                data: priorityValues,
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+
+                        precision: 0
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+
+/* =========================================================
+   SPEED VS DENSITY
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "speedDensityChart"
+    ),
+
+    {
+
+        type: "scatter",
+
+        data: {
+
+            datasets: [{
+
+                label:
+                    "Speed vs Density",
+
+                data:
+                    speeds.map(
+                        (speed, index) => ({
+
+                            x: speed,
+
+                            y: densities[index]
+
+                        })
+                    ),
+
+                pointRadius: 6
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                x: {
+
+                    title: {
+
+                        display: true,
+
+                        text: "Speed"
+
+                    }
+
+                },
+
+                y: {
+
+                    title: {
+
+                        display: true,
+
+                        text: "Density"
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+
+/* =========================================================
+   CONGESTION VS DELAY
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "congestionDelayChart"
+    ),
+
+    {
+
+        type: "scatter",
+
+        data: {
+
+            datasets: [{
+
+                label:
+                    "Congestion vs Delay",
+
+                data:
+                    congestions.map(
+                        (congestion, index) => ({
+
+                            x: congestion,
+
+                            y: delays[index]
+
+                        })
+                    ),
+
+                pointRadius: 6
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                x: {
+
+                    title: {
+
+                        display: true,
+
+                        text: "Congestion"
+
+                    }
+
+                },
+
+                y: {
+
+                    title: {
+
+                        display: true,
+
+                        text: "Delay"
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+
+/* =========================================================
+   SIGNAL VS BANDWIDTH
+========================================================= */
+
+new Chart(
+
+    document.getElementById(
+        "signalBandwidthChart"
+    ),
+
+    {
+
+        type: "scatter",
+
+        data: {
+
+            datasets: [{
+
+                label:
+                    "Signal Strength vs Bandwidth",
+
+                data:
+                    signals.map(
+                        (signal, index) => ({
+
+                            x: signal,
+
+                            y: bandwidths[index]
+
+                        })
+                    ),
+
+                pointRadius: 6
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                x: {
+
+                    title: {
+
+                        display: true,
+
+                        text:
+                            "Signal Strength"
+
+                    }
+
+                },
+
+                y: {
+
+                    title: {
+
+                        display: true,
+
+                        text:
+                            "Bandwidth"
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+
+/* =========================================================
+   AVERAGE VALUES
+========================================================= */
+
+const averageLabels = [
+    {% for feature, values in statistics.items() %}
+        "{{ feature }}",
+    {% endfor %}
+];
+
+
+const averageValues = [
+    {% for feature, values in statistics.items() %}
+        {{ values["mean"] }},
+    {% endfor %}
+];
+
+
+
+new Chart(
+
+    document.getElementById(
+        "averageChart"
+    ),
+
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: averageLabels,
+
+            datasets: [{
+
+                label:
+                    "Average Value",
+
+                data:
+                    averageValues,
+
+                borderWidth: 1
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+</script>
+
+
+</body>
+
+</html>
